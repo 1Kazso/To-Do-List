@@ -1,6 +1,7 @@
 import { useState } from "react"
 import AddTask from "./components/AddTask"
 import ListItem from "./components/ListItem"
+import EditTask from "./components/EditTask"
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -11,6 +12,10 @@ function App() {
       createdOn: new Date()
     },
   ])
+  const [taskToEdit, setTaskToEdit] = useState({
+    id: 0,
+    task: ""
+  })
 
   // function to add new task to existing tasks array
   const addNewTask = (taskDetails: string) => {
@@ -22,6 +27,15 @@ function App() {
     }
     // the spread operator ()...) is used to create a new array with existing tasks and the new task
     setTasks([...tasks, newTask])
+  }
+
+  const updateTask = (taskId: number, taskDetails: string) => {
+    let updTasks = tasks.map((task) => {
+      if (task.id === taskId)
+        task.task = taskDetails
+      return task
+    })
+    setTasks(updTasks)
   }
 
   const deleteTask = (taskId: number) => {
@@ -57,9 +71,10 @@ function App() {
           </div>
         </div> {/* end of button */}
         <AddTask addNewTask={addNewTask} />
+        <EditTask taskToEdit={taskToEdit} updateTask={updateTask} setTaskToEdit={setTaskToEdit} />
         <div className="bg-slate-300 w-full rounded-lg mt-4 p-8 py-6 px-8">
           {tasks.map((task) => (
-            <ListItem key={task.id} task={task} delTask={deleteTask} toggleComplete={toggleComplete} />
+            <ListItem key={task.id} task={task} delTask={deleteTask} toggleComplete={toggleComplete} setTaskToEdit={setTaskToEdit} />
           ))}
         </div>{/* end of list */}
       </div>
